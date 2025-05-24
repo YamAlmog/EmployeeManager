@@ -20,16 +20,13 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   filteredEmployees: Employee[] = [];
   loading = false;
 
-  // Filter properties
   nameFilter = '';
   departmentFilter = '';
   cityFilter = '';
 
-  // Unique lists for select dropdowns
   departments: string[] = [];
   cities: string[] = [];
 
-  // Modal dialog state
   editingEmployee: Employee | null = null;
 
   private subscriptions = new Subscription();
@@ -48,6 +45,7 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       })
     );
+
     this.subscriptions.add(
       this.employeeService.loading$.subscribe((loading: boolean) => {
         this.loading = loading;
@@ -91,19 +89,9 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   onDialogSave(updated: Employee): void {
     if (!this.editingEmployee) return;
     
-    this.employeeService.updateEmployee(this.editingEmployee.id, updated)
-      .subscribe({
-        next: (result) => {
-          this.employeeService.commitUpdateEmployee(this.editingEmployee!.id, updated);
-          this.editingEmployee = null;
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          console.error('Error updating employee:', error);
-          this.editingEmployee = null;
-          this.cdr.markForCheck();
-        }
-      });
+    this.employeeService.updateEmployee(this.editingEmployee.id, updated);
+    this.editingEmployee = null;
+    this.cdr.markForCheck();
   }
 
   onDialogCancel(): void {
@@ -113,15 +101,7 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
 
   onDeleteEmployee(id: number): void {
     if (confirm('Are you sure you want to delete this employee?')) {
-      this.employeeService.deleteEmployee(id)
-        .subscribe({
-          next: () => {
-            this.employeeService.commitDeleteEmployee(id);
-          },
-          error: (error) => {
-            console.error('Error deleting employee:', error);
-          }
-        });
+      this.employeeService.deleteEmployee(id);
     }
   }
 
@@ -136,7 +116,6 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
     return this.employees.map(e => e.id);
   }
 
-  // Method to refresh data from API
   refreshEmployees(): void {
     this.employeeService.refreshEmployees();
   }
