@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Employee } from '../../models/employee.interface';
 import { EmployeeService } from '../../services/employee.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-employees-view',
@@ -13,7 +14,7 @@ import { EmployeeService } from '../../services/employee.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmployeesViewComponent implements OnInit {
+export class EmployeesViewComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   loading = false;
@@ -27,34 +28,32 @@ export class EmployeesViewComponent implements OnInit {
   departments: string[] = [];
   cities: string[] = [];
 
+  private subscriptions = new Subscription();
+
   constructor(
     private employeeService: EmployeeService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadEmployees();
+    this.subscriptions.add(
+      this.employeeService.employees$.subscribe((data: Employee[]) => {
+        this.employees = data;
+        this.applyFilters();
+        this.updateFilterLists();
+        this.cdr.markForCheck();
+      })
+    );
+    this.subscriptions.add(
+      this.employeeService.loading$.subscribe((loading: boolean) => {
+        this.loading = loading;
+        this.cdr.markForCheck();
+      })
+    );
   }
 
-  loadEmployees(): void {
-    this.loading = true;
-    this.cdr.detectChanges();
-
-    this.employeeService.getEmployees()
-      .subscribe({
-        next: (data) => {
-          this.employees = data;
-          this.filteredEmployees = data;
-          this.updateFilterLists();
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error loading employees:', error);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   updateFilterLists(): void {
@@ -77,7 +76,7 @@ export class EmployeesViewComponent implements OnInit {
 
       return nameMatch && departmentMatch && cityMatch;
     });
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   onEditEmployee(employee: Employee): void {
@@ -86,23 +85,18 @@ export class EmployeesViewComponent implements OnInit {
   }
 
   onDeleteEmployee(id: number): void {
+    // We'll refactor this to use Akita in the next step
     this.loading = true;
-    this.cdr.detectChanges();
-
+    this.cdr.markForCheck();
     this.employeeService.deleteEmployee(id)
       .subscribe({
-        next: (success) => {
-          if (success) {
-            this.loadEmployees();
-          } else {
-            this.loading = false;
-            this.cdr.detectChanges();
-          }
+        next: () => {
+          this.employeeService.commitDeleteEmployee(id);
         },
         error: (error) => {
           console.error('Error deleting employee:', error);
           this.loading = false;
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         }
       });
   }
@@ -112,6 +106,6 @@ export class EmployeesViewComponent implements OnInit {
     this.departmentFilter = '';
     this.cityFilter = '';
     this.filteredEmployees = this.employees;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 }
