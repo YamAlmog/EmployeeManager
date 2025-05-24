@@ -1,6 +1,43 @@
 <div class="employees-container">
     <h2>Employees List</h2>
     
+    <!-- Filters -->
+    <div class="filters-container">
+        <div class="filter-group">
+            <label for="nameFilter">Search by Name:</label>
+            <input 
+                id="nameFilter"
+                type="text" 
+                [(ngModel)]="nameFilter" 
+                (ngModelChange)="applyFilters()"
+                placeholder="Search by first or last name">
+        </div>
+
+        <div class="filter-group">
+            <label for="departmentFilter">Filter by Department:</label>
+            <select 
+                id="departmentFilter"
+                [(ngModel)]="departmentFilter" 
+                (ngModelChange)="applyFilters()">
+                <option value="">All Departments</option>
+                <option *ngFor="let dept of departments" [value]="dept">{{dept}}</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="cityFilter">Filter by City:</label>
+            <select 
+                id="cityFilter"
+                [(ngModel)]="cityFilter" 
+                (ngModelChange)="applyFilters()">
+                <option value="">All Cities</option>
+                <option *ngFor="let city of cities" [value]="city">{{city}}</option>
+            </select>
+        </div>
+
+        <button class="clear-filters" (click)="clearFilters()">Clear Filters</button>
+    </div>
+    
     <!-- Loading indicator -->
     <div *ngIf="loading" class="loading-container">
         <div class="progress-bar">
@@ -10,7 +47,7 @@
     </div>
 
     <!-- Employees table -->
-    <table *ngIf="!loading && employees.length > 0">
+    <table *ngIf="!loading && filteredEmployees.length > 0">
         <thead>
             <tr>
                 <th>ID</th>
@@ -24,7 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let employee of employees">
+            <tr *ngFor="let employee of filteredEmployees">
                 <td>{{employee.id}}</td>
                 <td>{{employee.firstName}}</td>
                 <td>{{employee.lastName}}</td>
@@ -32,16 +69,16 @@
                 <td>{{employee.address.city}}</td>
                 <td>{{employee.address.street}}</td>
                 <td>{{employee.department | uppercase}}</td>
-                <td>
-                    <button (click)="onEditEmployee(employee)">Edit</button>
-                    <button (click)="onDeleteEmployee(employee.id)">Delete</button>
+                <td class="actions">
+                    <button class="edit-btn" (click)="onEditEmployee(employee)">Edit</button>
+                    <button class="delete-btn" (click)="onDeleteEmployee(employee.id)">Delete</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
     <!-- No employees message -->
-    <div *ngIf="!loading && employees.length === 0" class="no-data">
+    <div *ngIf="!loading && filteredEmployees.length === 0" class="no-data">
         No employees found.
     </div>
 </div>
