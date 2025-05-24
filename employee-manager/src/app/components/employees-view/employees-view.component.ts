@@ -41,15 +41,19 @@ export class EmployeesViewComponent implements OnInit {
   }
 
   onDeleteEmployee(id: number): void {
+    this.loading = true;
     this.employeeService.deleteEmployee(id)
       .subscribe({
         next: (success) => {
           if (success) {
-            this.loadEmployees(); // Reload the list after deletion
+            this.loadEmployees();
+          } else {
+            this.loading = false;
           }
         },
         error: (error) => {
           console.error('Error deleting employee:', error);
+          this.loading = false;
         }
       });
   }

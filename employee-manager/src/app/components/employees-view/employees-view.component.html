@@ -2,8 +2,11 @@
     <h2>Employees List</h2>
     
     <!-- Loading indicator -->
-    <div *ngIf="loading" class="loading">
-        Loading employees...
+    <div *ngIf="loading" class="loading-container">
+        <div class="progress-bar">
+            <div class="progress-bar-value"></div>
+        </div>
+        <p class="loading-text">Loading employees...</p>
     </div>
 
     <!-- Employees table -->
