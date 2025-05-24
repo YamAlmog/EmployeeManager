@@ -90,21 +90,17 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
 
   onDialogSave(updated: Employee): void {
     if (!this.editingEmployee) return;
-    this.loading = true;
-    this.cdr.markForCheck();
+    
     this.employeeService.updateEmployee(this.editingEmployee.id, updated)
       .subscribe({
         next: (result) => {
-          if (result) {
-            this.employeeService.commitUpdateEmployee(this.editingEmployee!.id, updated);
-          }
+          this.employeeService.commitUpdateEmployee(this.editingEmployee!.id, updated);
           this.editingEmployee = null;
-          this.loading = false;
           this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error updating employee:', error);
-          this.loading = false;
+          this.editingEmployee = null;
           this.cdr.markForCheck();
         }
       });
@@ -116,31 +112,32 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   }
 
   onDeleteEmployee(id: number): void {
-    // We'll refactor this to use Akita in the next step
-    this.loading = true;
-    this.cdr.markForCheck();
-    this.employeeService.deleteEmployee(id)
-      .subscribe({
-        next: () => {
-          this.employeeService.commitDeleteEmployee(id);
-        },
-        error: (error) => {
-          console.error('Error deleting employee:', error);
-          this.loading = false;
-          this.cdr.markForCheck();
-        }
-      });
+    if (confirm('Are you sure you want to delete this employee?')) {
+      this.employeeService.deleteEmployee(id)
+        .subscribe({
+          next: () => {
+            this.employeeService.commitDeleteEmployee(id);
+          },
+          error: (error) => {
+            console.error('Error deleting employee:', error);
+          }
+        });
+    }
   }
 
   clearFilters(): void {
     this.nameFilter = '';
     this.departmentFilter = '';
     this.cityFilter = '';
-    this.filteredEmployees = this.employees;
-    this.cdr.markForCheck();
+    this.applyFilters();
   }
 
   get allEmployeeIds(): number[] {
     return this.employees.map(e => e.id);
+  }
+
+  // Method to refresh data from API
+  refreshEmployees(): void {
+    this.employeeService.refreshEmployees();
   }
 }

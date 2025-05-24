@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, delay, catchError } from 'rxjs';
 import { Employee } from '../models/employee.interface';
-import { MOCK_EMPLOYEES } from '../mock/employees.mock';
 import { EmployeeStore } from '../state/employee/employee.store';
 import { EmployeeQuery } from '../state/employee/employee.query';
 
@@ -9,21 +9,37 @@ import { EmployeeQuery } from '../state/employee/employee.query';
   providedIn: 'root'
 })
 export class EmployeeService {
+  private readonly apiUrl = 'http://localhost:3000/api/employees';
+  
   employees$: Observable<Employee[]>;
   loading$: Observable<boolean>;
 
   constructor(
+    private http: HttpClient,
     private employeeStore: EmployeeStore,
     private employeeQuery: EmployeeQuery
   ) {
-    // Load mock data into the store on service initialization
-    this.employeeStore.setLoading(true);
-    of(MOCK_EMPLOYEES).pipe(delay(2000)).subscribe(data => {
-      this.employeeStore.set(data);
-      this.employeeStore.setLoading(false);
-    });
+    // Initialize observables
     this.employees$ = this.employeeQuery.selectAll();
     this.loading$ = this.employeeQuery.selectLoading();
+    
+    // Load initial data
+    this.loadEmployees();
+  }
+
+  // Load all employees from API
+  private loadEmployees(): void {
+    this.employeeStore.setLoading(true);
+    this.http.get<Employee[]>(this.apiUrl).pipe(
+      catchError(error => {
+        console.error('Error loading employees:', error);
+        this.employeeStore.setLoading(false);
+        return of([]);
+      })
+    ).subscribe(employees => {
+      this.employeeStore.set(employees);
+      this.employeeStore.setLoading(false);
+    });
   }
 
   // Get all employees (observable from Akita)
@@ -38,43 +54,41 @@ export class EmployeeService {
 
   // Add new employee
   addEmployee(employee: Omit<Employee, 'id'>): Observable<Employee> {
-    const newEmployee: Employee = {
-      ...employee,
-      id: this.generateNewId()
-    };
     this.employeeStore.setLoading(true);
-    return of(newEmployee).pipe(
-      delay(2000)
+    return this.http.post<Employee>(this.apiUrl, employee).pipe(
+      catchError(error => {
+        console.error('Error adding employee:', error);
+        this.employeeStore.setLoading(false);
+        throw error;
+      })
     );
   }
 
   // Update employee
-  updateEmployee(id: number, employee: Partial<Employee>): Observable<Employee | undefined> {
+  updateEmployee(id: number, employee: Partial<Employee>): Observable<Employee> {
     this.employeeStore.setLoading(true);
-    // Find the current employee
-    const current = this.employeeQuery.getEntity(id);
-    const updated: Employee | undefined = current ? { ...current, ...employee } : undefined;
-    return of(updated).pipe(
-      delay(2000)
+    return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee).pipe(
+      catchError(error => {
+        console.error('Error updating employee:', error);
+        this.employeeStore.setLoading(false);
+        throw error;
+      })
     );
   }
 
   // Delete employee
-  deleteEmployee(id: number): Observable<boolean> {
+  deleteEmployee(id: number): Observable<any> {
     this.employeeStore.setLoading(true);
-    const exists = !!this.employeeQuery.getEntity(id);
-    return of(exists).pipe(
-      delay(2000)
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error('Error deleting employee:', error);
+        this.employeeStore.setLoading(false);
+        throw error;
+      })
     );
   }
 
-  // Helper method to generate new ID
-  private generateNewId(): number {
-    const all = this.employeeQuery.getAll();
-    return all.length > 0 ? Math.max(...all.map((emp: Employee) => emp.id)) + 1 : 1;
-  }
-
-  // Methods to update the store after API simulation
+  // Methods to update the store after successful API calls
   commitAddEmployee(employee: Employee) {
     this.employeeStore.add(employee);
     this.employeeStore.setLoading(false);
@@ -88,5 +102,10 @@ export class EmployeeService {
   commitDeleteEmployee(id: number) {
     this.employeeStore.remove(id);
     this.employeeStore.setLoading(false);
+  }
+
+  // Refresh employees from API
+  refreshEmployees(): void {
+    this.loadEmployees();
   }
 }
