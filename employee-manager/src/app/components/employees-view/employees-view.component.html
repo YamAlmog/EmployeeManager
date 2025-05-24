@@ -28,7 +28,7 @@
                 <td>{{employee.age}}</td>
                 <td>{{employee.address.city}}</td>
                 <td>{{employee.address.street}}</td>
-                <td>{{employee.department}}</td>
+                <td>{{employee.department | uppercase}}</td>
                 <td>
                     <button (click)="onEditEmployee(employee)">Edit</button>
                     <button (click)="onDeleteEmployee(employee.id)">Delete</button>

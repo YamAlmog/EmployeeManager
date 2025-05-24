@@ -14,7 +14,7 @@ export class EmployeeService {
   // Get all employees with simulated API delay
   getEmployees(): Observable<Employee[]> {
     return of(this.employees).pipe(
-      delay(500) // Simulate network delay
+      delay(2000) // Simulate 2 second network delay
     );
   }
 
@@ -22,7 +22,7 @@ export class EmployeeService {
   getEmployeeById(id: number): Observable<Employee | undefined> {
     const employee = this.employees.find(emp => emp.id === id);
     return of(employee).pipe(
-      delay(500)
+      delay(2000)
     );
   }
 
@@ -34,7 +34,7 @@ export class EmployeeService {
     };
     this.employees.push(newEmployee);
     return of(newEmployee).pipe(
-      delay(500)
+      delay(2000)
     );
   }
 
@@ -44,11 +44,11 @@ export class EmployeeService {
     if (index !== -1) {
       this.employees[index] = { ...this.employees[index], ...employee };
       return of(this.employees[index]).pipe(
-        delay(500)
+        delay(2000)
       );
     }
     return of(undefined).pipe(
-      delay(500)
+      delay(2000)
     );
   }
 
@@ -58,11 +58,11 @@ export class EmployeeService {
     if (index !== -1) {
       this.employees.splice(index, 1);
       return of(true).pipe(
-        delay(500)
+        delay(2000)
       );
     }
     return of(false).pipe(
-      delay(500)
+      delay(2000)
     );
   }
 
