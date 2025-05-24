@@ -81,4 +81,13 @@
     <div *ngIf="!loading && filteredEmployees.length === 0" class="no-data">
         No employees found.
     </div>
+
+    <!-- Edit Employee Modal -->
+    <app-edit-employee-dialog
+      *ngIf="editingEmployee"
+      [employee]="editingEmployee"
+      [allEmployeeIds]="allEmployeeIds"
+      (save)="onDialogSave($event)"
+      (cancel)="onDialogCancel()"
+    ></app-edit-employee-dialog>
 </div>

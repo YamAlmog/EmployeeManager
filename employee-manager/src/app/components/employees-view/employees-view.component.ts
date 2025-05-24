@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Employee } from '../../models/employee.interface';
 import { EmployeeService } from '../../services/employee.service';
 import { Subscription } from 'rxjs';
+import { EditEmployeeDialogComponent } from '../edit-employee-dialog.component';
 
 @Component({
   selector: 'app-employees-view',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EditEmployeeDialogComponent],
   templateUrl: './employees-view.component.html',
   styleUrl: './employees-view.component.css',
   encapsulation: ViewEncapsulation.None,
@@ -27,6 +28,9 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   // Unique lists for select dropdowns
   departments: string[] = [];
   cities: string[] = [];
+
+  // Modal dialog state
+  editingEmployee: Employee | null = null;
 
   private subscriptions = new Subscription();
 
@@ -80,8 +84,35 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   }
 
   onEditEmployee(employee: Employee): void {
-    console.log('Edit employee:', employee);
-    // We'll implement this later with the dialog
+    this.editingEmployee = employee;
+    this.cdr.markForCheck();
+  }
+
+  onDialogSave(updated: Employee): void {
+    if (!this.editingEmployee) return;
+    this.loading = true;
+    this.cdr.markForCheck();
+    this.employeeService.updateEmployee(this.editingEmployee.id, updated)
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this.employeeService.commitUpdateEmployee(this.editingEmployee!.id, updated);
+          }
+          this.editingEmployee = null;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Error updating employee:', error);
+          this.loading = false;
+          this.cdr.markForCheck();
+        }
+      });
+  }
+
+  onDialogCancel(): void {
+    this.editingEmployee = null;
+    this.cdr.markForCheck();
   }
 
   onDeleteEmployee(id: number): void {
@@ -107,5 +138,9 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
     this.cityFilter = '';
     this.filteredEmployees = this.employees;
     this.cdr.markForCheck();
+  }
+
+  get allEmployeeIds(): number[] {
+    return this.employees.map(e => e.id);
   }
 }
