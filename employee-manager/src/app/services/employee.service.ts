@@ -43,10 +43,6 @@ export class EmployeeService {
     return this.employees$;
   }
 
-  getEmployeeById(id: number): Observable<Employee | undefined> {
-    return this.employeeQuery.selectEntity(id);
-  }
-
   addEmployee(employee: Omit<Employee, 'id'>): void {
     this.employeeStore.setLoading(true);
     

@@ -14,7 +14,7 @@ import { Employee } from '../models/employee.interface';
         <form #editForm="ngForm" (ngSubmit)="onSave()">
           <div class="form-group" *ngIf="!isAdding">
             <label>ID</label>
-            <input type="number" [(ngModel)]="editEmployee.id" name="id" required #idField="ngModel" />
+            <input type="number" [(ngModel)]="editEmployee.id" name="id" required #idField="ngModel" readonly />
             <div class="error" *ngIf="duplicateId">Duplicate ID not allowed.</div>
             <div class="error" *ngIf="idField.invalid && idField.touched && !duplicateId">
               Please enter a valid numeric ID.

@@ -26,20 +26,6 @@ app.get('/api/employees', (req, res) => {
     }, 2000);
 });
 
-// GET /api/employees/:id - Get employee by ID
-app.get('/api/employees/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const employee = employees.find(emp => emp.id === id);
-    
-    setTimeout(() => {
-        if (employee) {
-            res.json(employee);
-        } else {
-            res.status(404).json({ error: 'Employee not found' });
-        }
-    }, 500);
-});
-
 // POST /api/employees - Create new employee
 app.post('/api/employees', (req, res) => {
     const newEmployee = {
