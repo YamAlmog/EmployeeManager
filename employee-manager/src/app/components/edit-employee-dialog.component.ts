@@ -14,32 +14,53 @@ import { Employee } from '../models/employee.interface';
         <form #editForm="ngForm" (ngSubmit)="onSave()">
           <div class="form-group">
             <label>ID</label>
-            <input type="number" [(ngModel)]="editEmployee.id" name="id" required />
+            <input type="number" [(ngModel)]="editEmployee.id" name="id" required #idField="ngModel" />
             <div class="error" *ngIf="duplicateId">Duplicate ID not allowed.</div>
+            <div class="error" *ngIf="idField.invalid && idField.touched && !duplicateId">
+              Please enter a valid numeric ID.
+            </div>
           </div>
           <div class="form-group">
             <label>First Name</label>
-            <input type="text" [(ngModel)]="editEmployee.firstName" name="firstName" required />
+            <input type="text" [(ngModel)]="editEmployee.firstName" name="firstName" required pattern="^[A-Za-z\\s-]+$" #firstName="ngModel" />
+            <div class="error" *ngIf="firstName.invalid && firstName.touched">
+              Only letters, spaces, and hyphens are allowed.
+            </div>
           </div>
           <div class="form-group">
             <label>Last Name</label>
-            <input type="text" [(ngModel)]="editEmployee.lastName" name="lastName" required />
+            <input type="text" [(ngModel)]="editEmployee.lastName" name="lastName" required pattern="^[A-Za-z\\s-]+$" #lastName="ngModel" />
+            <div class="error" *ngIf="lastName.invalid && lastName.touched">
+              Only letters, spaces, and hyphens are allowed.
+            </div>
           </div>
           <div class="form-group">
             <label>Age</label>
-            <input type="number" [(ngModel)]="editEmployee.age" name="age" required min="0" />
+            <input type="number" [(ngModel)]="editEmployee.age" name="age" required min="15" max="120" #age="ngModel" />
+            <div class="error" *ngIf="age.invalid && age.touched">
+              Please enter a valid age (15-120).
+            </div>
           </div>
           <div class="form-group">
             <label>City</label>
-            <input type="text" [(ngModel)]="editEmployee.address.city" name="city" required />
+            <input type="text" [(ngModel)]="editEmployee.address.city" name="city" required pattern="^[A-Za-z\\s-]+$" #city="ngModel" />
+            <div class="error" *ngIf="city.invalid && city.touched">
+              Only letters, spaces, and hyphens are allowed.
+            </div>
           </div>
           <div class="form-group">
             <label>Street</label>
-            <input type="text" [(ngModel)]="editEmployee.address.street" name="street" required />
+            <input type="text" [(ngModel)]="editEmployee.address.street" name="street" required pattern="^[A-Za-z0-9\\s-]+$" #street="ngModel" />
+            <div class="error" *ngIf="street.invalid && street.touched">
+              Only letters, numbers, spaces, and hyphens are allowed.
+            </div>
           </div>
           <div class="form-group">
             <label>Department</label>
-            <input type="text" [(ngModel)]="editEmployee.department" name="department" required />
+            <input type="text" [(ngModel)]="editEmployee.department" name="department" required pattern="^[A-Za-z\\s-]+$" #department="ngModel" />
+            <div class="error" *ngIf="department.invalid && department.touched">
+              Only letters, spaces, and hyphens are allowed.
+            </div>
           </div>
           <div class="modal-actions">
             <button type="button" (click)="onCancel()">Cancel</button>
