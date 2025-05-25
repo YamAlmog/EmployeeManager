@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Employee } from '../../models/employee.interface';
 
 @Component({
-  selector: 'app-edit-employee-dialog',
+  selector: 'app-edit-employee-dialog',  // HTML tag for this dialog component
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-employee-dialog.component.html',
@@ -12,30 +12,19 @@ import { Employee } from '../../models/employee.interface';
 })
 export class EditEmployeeDialogComponent {
   @Input() employee!: Employee;
-  @Input() allEmployeeIds: number[] = [];
-  @Input() isAdding = false;
-  @Output() save = new EventEmitter<Employee>();
-  @Output() cancel = new EventEmitter<void>();
+  @Input() isAdding = false;    // true if adding a new employee, false if editing
+  @Output() save = new EventEmitter<Employee>(); // event sent to parent when Save is clicked
+  @Output() cancel = new EventEmitter<void>();   // event sent to parent when Cancel is clicked
 
-  editEmployee!: Employee;
-  duplicateId = false;
+  editEmployee!: Employee; // local copy of the employee for editing in the form
 
   ngOnInit() {
-    // Deep copy to avoid mutating the original
+    // make a deep copy so changes in the form don't affect the original until onSave
     this.editEmployee = JSON.parse(JSON.stringify(this.employee));
   }
 
-  ngDoCheck() {
-    // Check for duplicate ID (excluding the current employee)
-    this.duplicateId = this.allEmployeeIds
-      .filter(id => id !== this.employee.id)
-      .includes(this.editEmployee.id!);
-  }
-
   onSave() {
-    if (!this.duplicateId) {
-      this.save.emit(this.editEmployee);
-    }
+    this.save.emit(this.editEmployee);
   }
 
   onCancel() {

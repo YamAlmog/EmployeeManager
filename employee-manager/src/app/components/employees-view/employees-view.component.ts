@@ -129,10 +129,6 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  get allEmployeeIds(): number[] {
-    return this.employees.map(e => e.id).filter((id): id is number => id !== undefined);
-  }
-
   refreshEmployees(): void {
     this.employeeService.refreshEmployees();
   }

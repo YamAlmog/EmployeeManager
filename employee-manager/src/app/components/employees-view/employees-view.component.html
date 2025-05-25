@@ -96,7 +96,6 @@
     <app-edit-employee-dialog
       *ngIf="editingEmployee"
       [employee]="editingEmployee"
-      [allEmployeeIds]="allEmployeeIds"
       [isAdding]="isAdding"
       (save)="onDialogSave($event)"
       (cancel)="onDialogCancel()"
