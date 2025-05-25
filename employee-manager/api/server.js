@@ -23,7 +23,7 @@ app.get('/api/employees', (req, res) => {
     // Simulate network delay
     setTimeout(() => {
         res.json(employees);
-    }, 1000);
+    }, 2000);
 });
 
 // GET /api/employees/:id - Get employee by ID

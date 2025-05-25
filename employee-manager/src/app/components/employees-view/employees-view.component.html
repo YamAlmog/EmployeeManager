@@ -63,8 +63,8 @@
         <tbody>
             <tr *ngFor="let employee of filteredEmployees">
                 <td>{{employee.id}}</td>
-                <td>{{employee.firstName}}</td>
-                <td>{{employee.lastName}}</td>
+                <td [innerHTML]="employee.firstName | highlight:nameFilter"></td>
+                <td [innerHTML]="employee.lastName | highlight:nameFilter"></td>
                 <td>{{employee.age}}</td>
                 <td>{{employee.address.city}}</td>
                 <td>{{employee.address.street}}</td>

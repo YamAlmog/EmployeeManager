@@ -5,11 +5,12 @@ import { Employee } from '../../models/employee.interface';
 import { EmployeeService } from '../../services/employee.service';
 import { Subscription } from 'rxjs';
 import { EditEmployeeDialogComponent } from '../edit-employee-dialog.component';
+import { HighlightPipe } from './highlight.pipe';
 
 @Component({
   selector: 'app-employees-view',
   standalone: true,
-  imports: [CommonModule, FormsModule, EditEmployeeDialogComponent],
+  imports: [CommonModule, FormsModule, EditEmployeeDialogComponent, HighlightPipe],
   templateUrl: './employees-view.component.html',
   styleUrl: './employees-view.component.css',
   encapsulation: ViewEncapsulation.None,
