@@ -60,3 +60,30 @@ h1 {
     color: #333;
     margin-bottom: 20px;
 }
+
+.main-app-title {
+    text-align: left;
+    font-size: 2.6rem;
+    font-weight: 400;
+    color: #2c3e50;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2em;
+    margin-top: 0.2em;
+    line-height: 1.1;
+    text-shadow: 0 2px 8px rgba(60,72,88,0.04);
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    padding-left: 16px;
+}
+
+.main-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.2em;
+    margin-top: 0.2em;
+}
+
+.employee-icon {
+    display: flex;
+    align-items: center;
+}

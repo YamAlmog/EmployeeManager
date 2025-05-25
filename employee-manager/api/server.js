@@ -23,21 +23,7 @@ app.get('/api/employees', (req, res) => {
     // Simulate network delay
     setTimeout(() => {
         res.json(employees);
-    }, 1000);
-});
-
-// GET /api/employees/:id - Get employee by ID
-app.get('/api/employees/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const employee = employees.find(emp => emp.id === id);
-    
-    setTimeout(() => {
-        if (employee) {
-            res.json(employee);
-        } else {
-            res.status(404).json({ error: 'Employee not found' });
-        }
-    }, 500);
+    }, 2000);
 });
 
 // POST /api/employees - Create new employee
@@ -58,7 +44,7 @@ app.post('/api/employees', (req, res) => {
     
     setTimeout(() => {
         res.status(201).json(newEmployee);
-    }, 1000);
+    }, 2000);
 });
 
 // PUT /api/employees/:id - Update employee
@@ -79,7 +65,7 @@ app.put('/api/employees/:id', (req, res) => {
     
     setTimeout(() => {
         res.json(employees[employeeIndex]);
-    }, 1000);
+    }, 2000);
 });
 
 // DELETE /api/employees/:id - Delete employee
@@ -95,7 +81,7 @@ app.delete('/api/employees/:id', (req, res) => {
     
     setTimeout(() => {
         res.json({ message: 'Employee deleted successfully', employee: deletedEmployee });
-    }, 1000);
+    }, 2000);
 });
 
 // Health check endpoint
