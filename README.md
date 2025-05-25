@@ -54,14 +54,26 @@ docker-compose down
 ## Project Structure
 
 ```
-src/
-├── app/
-│   ├── components/      # Reusable UI components
-│   ├── models/         # Data models and interfaces
-│   ├── services/       # API and business logic services
-│   └── pages/          # Main application pages
-├── assets/            # Static files
-└── environments/      # Environment configuration
+employee-manager/
+├── src/                 # Frontend source code
+│   ├── app/             # Main Angular app code
+│   │   ├── components/  # UI components
+│   │   ├── models/      # Data models and interfaces
+│   │   ├── services/    # Angular services
+│   │   ├── state/       # State management
+│   │   └── ...
+│   ├── main.ts          # Angular entry point
+│   ├── index.html       # App HTML shell
+│   └── styles.css       # Global styles
+├── public/              # Static assets (favicon, etc.)
+├── api/                 # Backend API (Node.js)
+│   ├── server.js        # Express server
+│   ├── data/            # Employee data storage
+│   └── ...
+├── docker-compose.yml   # Docker Compose config
+├── Dockerfile           # Frontend Docker build
+├── package.json         # Project dependencies
+└── README.md            
 ```
 
 ## Development
@@ -70,11 +82,3 @@ src/
 - Run `ng build` to build the project
 - Run `ng test` to execute unit tests
 - Run `ng e2e` to execute end-to-end tests
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request 
