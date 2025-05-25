@@ -22,7 +22,7 @@ A modern Employee Management System built with Angular, providing basic function
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/YamAlmog/EmployeeManager.git
 cd EmpolyeesManager
 ```
 
@@ -75,4 +75,3 @@ employee-manager/
 ├── package.json         # Project dependencies
 └── README.md            
 ```
-
