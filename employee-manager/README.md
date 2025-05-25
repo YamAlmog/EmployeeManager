@@ -1,128 +1,57 @@
-# EmployeeManager
+# Employee Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
-
-## Architecture
-
-This is a full-stack employee management application with:
-
-- **Frontend**: Angular 19 with Akita state management
-- **Backend**: Node.js Express API with CRUD operations
-- **Containerization**: Docker Compose setup for both services
+A simple app to manage employees. You can view, add, edit, and delete employees. The app has a modern Angular frontend and a Node.js backend API. Both run easily with Docker.
 
 ## Features
+- View all employees in a table
+- Filter by name, department, or city
+- Add, edit, and delete employees
+- Responsive design
 
-- View, add, edit, and delete employees
-- Real-time filtering by name, department, and city
-- Responsive design with modern UI
-- State management with Akita
-- RESTful API backend
-- Docker containerization
+## Quick Start (Recommended: Docker)
 
-## Getting Started
+1. **Clone this repository**
+2. **Start everything with Docker Compose:**
+   ```bash
+   docker-compose up --build
+   ```
+3. **Open your browser:**
+   - Frontend: [http://localhost:4200](http://localhost:4200)
+   - API: [http://localhost:3000/api/employees](http://localhost:3000/api/employees)
 
-### Prerequisites
+## Running Locally (Without Docker)
 
-- Docker and Docker Compose
-- Node.js 18+ (for local development)
-
-### Running with Docker (Recommended)
-
-1. Clone the repository
-2. Run the application:
-
+### Frontend (Angular)
 ```bash
-docker-compose up --build
+npm install
+npm start
 ```
+Go to [http://localhost:4200](http://localhost:4200)
 
-This will start:
-- Angular frontend at `http://localhost:4200`
-- Node.js API at `http://localhost:3000`
-
-### Development server
-
-To start a local development server, run:
-
+### Backend (Node.js API)
 ```bash
-ng serve
+cd api
+npm install
+npm start
 ```
+API will be at [http://localhost:3000/api/employees](http://localhost:3000/api/employees)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## API Documentation
-
-The backend API provides the following endpoints:
-
-- `GET /api/employees` - Get all employees
-- `GET /api/employees/:id` - Get employee by ID
-- `POST /api/employees` - Create new employee
-- `PUT /api/employees/:id` - Update employee
-- `DELETE /api/employees/:id` - Delete employee
-- `GET /health` - Health check
-
-See `api/README.md` for detailed API documentation.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## API Endpoints (Summary)
+- `GET /api/employees` — List all employees
+- `GET /api/employees/:id` — Get one employee
+- `POST /api/employees` — Add new employee
+- `PUT /api/employees/:id` — Update employee
+- `DELETE /api/employees/:id` — Delete employee
 
 ## Project Structure
-
 ```
 employee-manager/
-├── src/                    # Angular frontend source
-│   ├── app/
-│   │   ├── components/     # Angular components
-│   │   ├── services/       # Services and HTTP calls
-│   │   ├── state/          # Akita state management
-│   │   ├── models/         # TypeScript interfaces
-│   │   └── mock/           # Mock data (not used in production)
-├── api/                    # Node.js backend
-│   ├── data/              # Employee data
-│   ├── server.js          # Express server
-│   └── package.json       # Backend dependencies
-├── docker-compose.yml      # Docker configuration
-└── Dockerfile             # Frontend Docker image
+├── src/         # Angular frontend
+├── api/         # Node.js backend
+├── docker-compose.yml
+└── Dockerfile
 ```
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Need Help?
+- For more details, see the `api/README.md` for backend info.
+- If you have Docker and Node.js, you're ready to go!
