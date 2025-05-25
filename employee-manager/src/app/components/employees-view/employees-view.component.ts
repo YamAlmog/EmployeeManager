@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Employee } from '../../models/employee.interface';
 import { EmployeeService } from '../../services/employee.service';
 import { Subscription } from 'rxjs';
-import { EditEmployeeDialogComponent } from '../edit-employee-dialog.component';
+import { EditEmployeeDialogComponent } from '../edit-employee-dialog/edit-employee-dialog.component';
 import { HighlightPipe } from './highlight.pipe';
 
 @Component({
