@@ -29,6 +29,7 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   cities: string[] = [];
 
   editingEmployee: Employee | null = null;
+  isAdding = false;
 
   private subscriptions = new Subscription();
 
@@ -84,14 +85,21 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
 
   onEditEmployee(employee: Employee): void {
     this.editingEmployee = employee;
+    this.isAdding = false;
     this.cdr.markForCheck();
   }
 
   onDialogSave(updated: Employee): void {
     if (!this.editingEmployee) return;
     
-    this.employeeService.updateEmployee(this.editingEmployee.id, updated);
+    if (this.isAdding) {
+      const { id, ...employeeData } = updated;
+      this.employeeService.addEmployee(employeeData);
+    } else {
+      this.employeeService.updateEmployee(this.editingEmployee.id, updated);
+    }
     this.editingEmployee = null;
+    this.isAdding = false;
     this.cdr.markForCheck();
   }
 
@@ -119,5 +127,18 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
 
   refreshEmployees(): void {
     this.employeeService.refreshEmployees();
+  }
+
+  onAddEmployee(): void {
+    this.editingEmployee = {
+      id: 0, // or undefined, but 0 is fine for a new employee
+      firstName: '',
+      lastName: '',
+      age: 18,
+      address: { city: '', street: '' },
+      department: ''
+    };
+    this.isAdding = true;
+    this.cdr.markForCheck();
   }
 }

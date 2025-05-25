@@ -169,3 +169,32 @@ tr:hover {
     background-color: yellow;
     font-weight: bold;
 }
+
+.add-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(40,167,69,0.08);
+}
+
+.add-btn:hover, .add-btn:focus {
+    background-color: #4ab160;
+    box-shadow: 0 4px 12px rgba(40,167,69,0.15);
+}
+
+.add-icon {
+    font-size: 1.3em;
+    margin-right: 8px;
+    font-weight: bold;
+    line-height: 1;
+}

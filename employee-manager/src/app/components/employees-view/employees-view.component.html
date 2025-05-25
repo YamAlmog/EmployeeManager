@@ -46,6 +46,10 @@
         <p class="loading-text">Loading employees...</p>
     </div>
 
+    <button class="add-btn" (click)="onAddEmployee()" aria-label="Add Employee">
+        <span class="add-icon">+</span> Add Employee
+    </button>
+
     <!-- Employees table -->
     <table *ngIf="!loading && filteredEmployees.length > 0">
         <thead>
@@ -87,7 +91,10 @@
       *ngIf="editingEmployee"
       [employee]="editingEmployee"
       [allEmployeeIds]="allEmployeeIds"
+      [isAdding]="isAdding"
       (save)="onDialogSave($event)"
       (cancel)="onDialogCancel()"
     ></app-edit-employee-dialog>
+
+    
 </div>

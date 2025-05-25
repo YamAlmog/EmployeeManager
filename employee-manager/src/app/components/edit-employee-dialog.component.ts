@@ -10,9 +10,9 @@ import { Employee } from '../models/employee.interface';
   template: `
     <div class="modal-overlay">
       <div class="modal-dialog">
-        <h3>Edit Employee</h3>
+        <h3>{{ isAdding ? 'Add Employee' : 'Edit Employee' }}</h3>
         <form #editForm="ngForm" (ngSubmit)="onSave()">
-          <div class="form-group">
+          <div class="form-group" *ngIf="!isAdding">
             <label>ID</label>
             <input type="number" [(ngModel)]="editEmployee.id" name="id" required #idField="ngModel" />
             <div class="error" *ngIf="duplicateId">Duplicate ID not allowed.</div>
@@ -137,6 +137,7 @@ import { Employee } from '../models/employee.interface';
 export class EditEmployeeDialogComponent {
   @Input() employee!: Employee;
   @Input() allEmployeeIds: number[] = [];
+  @Input() isAdding = false;
   @Output() save = new EventEmitter<Employee>();
   @Output() cancel = new EventEmitter<void>();
 
