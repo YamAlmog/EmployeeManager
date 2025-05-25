@@ -29,7 +29,7 @@ export class EditEmployeeDialogComponent {
     // Check for duplicate ID (excluding the current employee)
     this.duplicateId = this.allEmployeeIds
       .filter(id => id !== this.employee.id)
-      .includes(this.editEmployee.id);
+      .includes(this.editEmployee.id!);
   }
 
   onSave() {

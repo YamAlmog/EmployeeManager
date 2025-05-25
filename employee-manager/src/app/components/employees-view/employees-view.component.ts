@@ -19,7 +19,7 @@ import { HighlightPipe } from './highlight.pipe';
 export class EmployeesViewComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
-  loading = false;
+  loading = false; // Observable boolean tells when employee data is being loaded, show or hide a loading indicator bar
 
   nameFilter = '';
   departmentFilter = '';
@@ -29,22 +29,22 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   cities: string[] = [];
 
   editingEmployee: Employee | null = null;
-  isAdding = false;
+  isAdding = false; //    tracks if the dialog is in "add mode"
 
   private subscriptions = new Subscription();
 
   constructor(
     private employeeService: EmployeeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef    // Injects ChangeDetectorRef to manually trigger change detection
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {    // runs once when a component is initialized, sets up listeners for employee data
     this.subscriptions.add(
       this.employeeService.employees$.subscribe((data: Employee[]) => {
         this.employees = data;
         this.applyFilters();
         this.updateFilterLists();
-        this.cdr.markForCheck();
+        this.cdr.markForCheck();    // Manually mark component for check to update the view
       })
     );
 
@@ -56,47 +56,55 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  ngOnDestroy(): void {   // call this when the component is about to be destroyed
+    this.subscriptions.unsubscribe();   // ensures that all observable streams are properly closed
   }
 
   updateFilterLists(): void {
-    this.departments = [...new Set(this.employees.map(emp => emp.department))];
-    this.cities = [...new Set(this.employees.map(emp => emp.address.city))];
+    const allDepartments = this.employees.map(emp => emp.department);
+    this.departments = Array.from(new Set(allDepartments)).sort();
+
+    const allCities = this.employees.map(emp => emp.address.city);
+    this.cities = Array.from(new Set(allCities)).sort();
   }
 
   applyFilters(): void {
-    this.filteredEmployees = this.employees.filter(employee => {
-      const nameMatch = !this.nameFilter || 
-        `${employee.firstName} ${employee.lastName}`
-          .toLowerCase()
-          .includes(this.nameFilter.toLowerCase());
-
-      const departmentMatch = !this.departmentFilter || 
-        employee.department === this.departmentFilter;
-
-      const cityMatch = !this.cityFilter || 
-        employee.address.city === this.cityFilter;
-
-      return nameMatch && departmentMatch && cityMatch;
-    });
+    let filtered = this.employees;
+    if (this.nameFilter) {
+      const search = this.nameFilter.toLowerCase();
+      filtered = filtered.filter(employee =>
+        (`${employee.firstName} ${employee.lastName}`).toLowerCase().includes(search)
+      );
+    }
+    if (this.departmentFilter) {
+      filtered = filtered.filter(employee =>
+        employee.department === this.departmentFilter
+      );
+    }
+    if (this.cityFilter) {
+      filtered = filtered.filter(employee =>
+        employee.address.city === this.cityFilter
+      );
+    }
+    this.filteredEmployees = filtered;
     this.cdr.markForCheck();
   }
 
   onEditEmployee(employee: Employee): void {
     this.editingEmployee = employee;
-    this.isAdding = false;
+    this.isAdding = false;    // Indicating that we are in edit mode not add mode
     this.cdr.markForCheck();
   }
 
-  onDialogSave(updated: Employee): void {
-    if (!this.editingEmployee) return;
-    
+  onDialogSave(updatedEmployee: Employee): void {
+    if (!this.editingEmployee) return; // If there is no employee being edited, do nothing
+
     if (this.isAdding) {
-      const { id, ...employeeData } = updated;
-      this.employeeService.addEmployee(employeeData);
+      // adding a new employee
+      this.employeeService.addEmployee(updatedEmployee);   // send the object as-is; backend will create the id
     } else {
-      this.employeeService.updateEmployee(this.editingEmployee.id, updated);
+      // editing an existing employee
+      this.employeeService.updateEmployee(this.editingEmployee.id!, updatedEmployee);  //  ! means id is defined here for sure 
     }
     this.editingEmployee = null;
     this.isAdding = false;
@@ -122,7 +130,7 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   }
 
   get allEmployeeIds(): number[] {
-    return this.employees.map(e => e.id);
+    return this.employees.map(e => e.id).filter((id): id is number => id !== undefined);
   }
 
   refreshEmployees(): void {
@@ -131,7 +139,6 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
 
   onAddEmployee(): void {
     this.editingEmployee = {
-      id: 0, // or undefined, but 0 is fine for a new employee
       firstName: '',
       lastName: '',
       age: 18,

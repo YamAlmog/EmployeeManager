@@ -44,7 +44,7 @@ app.post('/api/employees', (req, res) => {
     
     setTimeout(() => {
         res.status(201).json(newEmployee);
-    }, 1000);
+    }, 2000);
 });
 
 // PUT /api/employees/:id - Update employee
@@ -65,7 +65,7 @@ app.put('/api/employees/:id', (req, res) => {
     
     setTimeout(() => {
         res.json(employees[employeeIndex]);
-    }, 1000);
+    }, 2000);
 });
 
 // DELETE /api/employees/:id - Delete employee
@@ -81,7 +81,7 @@ app.delete('/api/employees/:id', (req, res) => {
     
     setTimeout(() => {
         res.json({ message: 'Employee deleted successfully', employee: deletedEmployee });
-    }, 1000);
+    }, 2000);
 });
 
 // Health check endpoint

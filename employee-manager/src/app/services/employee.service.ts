@@ -25,12 +25,12 @@ export class EmployeeService {
   }
 
   loadEmployees(): void {
-    this.employeeStore.setLoading(true);
+    this.employeeStore.setLoading(true);   // show the loading indicator
     
     this.http.get<Employee[]>(this.apiUrl).subscribe({
-      next: (employees) => {
+      next: (employees) => {  // employees is the data sent back from the server if successful
         this.employeeStore.set(employees);
-        this.employeeStore.setLoading(false);
+        this.employeeStore.setLoading(false);   // stop the loading indicator
       },
       error: (error) => {
         console.error('Error loading employees:', error);
@@ -63,7 +63,7 @@ export class EmployeeService {
     this.employeeStore.setLoading(true);
     
     this.http.put<Employee>(`${this.apiUrl}/${id}`, employee).subscribe({
-      next: (updatedEmployee) => {
+      next: (updatedEmployee) => {    // updatedEmployee is the data sent back from the server if successful
         this.employeeStore.update(id, updatedEmployee);
         this.employeeStore.setLoading(false);
         console.log('Employee updated successfully!');
@@ -80,8 +80,8 @@ export class EmployeeService {
     
     this.http.delete(`${this.apiUrl}/${id}`).subscribe({
       next: () => {
-        this.employeeStore.remove(id);
-        this.employeeStore.setLoading(false);
+        this.employeeStore.remove(id);   // remove employee from frontend state(akita)
+        this.employeeStore.setLoading(false); // stop the loading indicator
         console.log('Employee deleted successfully!');
       },
       error: (error) => {
