@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  angular-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://employee-api:3000
+    command: ng serve --host 0.0.0.0 --poll=2000 --disable-host-check
+    depends_on:
+      - employee-api
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4200/"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  employee-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 15s 
