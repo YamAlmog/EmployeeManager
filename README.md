@@ -76,9 +76,3 @@ employee-manager/
 └── README.md            
 ```
 
-## Development
-
-- Run `ng serve` for a dev server
-- Run `ng build` to build the project
-- Run `ng test` to execute unit tests
-- Run `ng e2e` to execute end-to-end tests
