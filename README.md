@@ -55,18 +55,21 @@ docker-compose down
 
 ### End-to-End Tests with Cypress
 
-1. First, make sure the application is running with Docker Compose:
+Open a terminal and run these commands:
+
+1. Start the application:
 ```bash
 docker-compose up --build
 ```
 
-2. In a new terminal, run the Cypress tests:
+2. Open a new terminal and install Cypress:
 ```bash
-# Open Cypress Test Runner (interactive mode)
-npx cypress open
+npm install cypress --save-dev
+```
 
-# Or run tests in headless mode (runs in the terminal without opening a browser window)
-npx cypress run
+3. Run the tests:
+```bash
+npx cypress open
 ```
 
 The Cypress tests will run against the dockerized application running at `http://localhost:4200`.
