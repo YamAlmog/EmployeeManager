@@ -18,7 +18,7 @@ import { HighlightPipe } from './highlight.pipe';
 })
 export class EmployeesViewComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
-  filteredEmployees: Employee[] = [];
+  filteredEmployees: Employee[] = []; // Holds filtered employees
   loading = false; // Observable boolean tells when employee data is being loaded, show or hide a loading indicator bar
 
   nameFilter = '';
@@ -29,12 +29,12 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   cities: string[] = [];
 
   editingEmployee: Employee | null = null;
-  isAdding = false; //    tracks if the dialog is in "add mode"
+  isAdding = false;  //  tracks if the dialog is in "add mode"
 
-  private subscriptions = new Subscription();
+  private subscriptions = new Subscription();  // Holds all the subscriptions to the observables
 
   constructor(
-    private employeeService: EmployeeService,
+    private employeeService: EmployeeService,   // Injects the EmployeeService for CRUD operations
     private cdr: ChangeDetectorRef    // Injects ChangeDetectorRef to manually trigger change detection
   ) {}
 

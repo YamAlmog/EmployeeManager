@@ -40,6 +40,7 @@ app.post('/api/employees', (req, res) => {
         return res.status(400).json({ error: 'Missing required fields' });
     }
     
+    console.log('Adding new employee:', newEmployee);
     employees.push(newEmployee);
     
     setTimeout(() => {

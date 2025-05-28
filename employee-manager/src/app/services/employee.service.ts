@@ -6,25 +6,25 @@ import { EmployeeStore } from '../state/employee/employee.store';
 import { EmployeeQuery } from '../state/employee/employee.query';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root'  // makes the service available to the entire application
 })
 export class EmployeeService {
   private readonly apiUrl = 'http://localhost:3000/api/employees';
   
-  employees$: Observable<Employee[]>;
-  loading$: Observable<boolean>;
+  employees$: Observable<Employee[]>; // Observable that holds the employees data
+  loading$: Observable<boolean>; // Observable that holds the loading state
 
   constructor(
     private http: HttpClient,
     private employeeStore: EmployeeStore,
     private employeeQuery: EmployeeQuery
   ) {
-    this.employees$ = this.employeeQuery.selectAll();
-    this.loading$ = this.employeeQuery.selectLoading();
+    this.employees$ = this.employeeQuery.selectAll(); // selectAll() returns all the employees from store
+    this.loading$ = this.employeeQuery.selectLoading(); // selectLoading() returns the loading state from store
     this.loadEmployees();
   }
 
-  loadEmployees(): void {
+  loadEmployees(): void { // loads the employees from the server
     this.employeeStore.setLoading(true);   // show the loading indicator
     
     this.http.get<Employee[]>(this.apiUrl).subscribe({
@@ -40,7 +40,7 @@ export class EmployeeService {
   }
 
   getEmployees(): Observable<Employee[]> {
-    return this.employees$;
+    return this.employees$; // returns the employees data
   }
 
   addEmployee(employee: Omit<Employee, 'id'>): void {

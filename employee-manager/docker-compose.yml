@@ -13,15 +13,15 @@ services:
     environment:
       - NODE_ENV=development
       - API_URL=http://employee-api:3000
-    command: ng serve --host 0.0.0.0 --poll=2000 --disable-host-check
+    command: ng serve --host 0.0.0.0 --disable-host-check --poll=2000
     depends_on:
       - employee-api
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4200/"]
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:4200/"]
       interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 30s 
 
   employee-api:
     build:
@@ -35,8 +35,28 @@ services:
     environment:
       - NODE_ENV=development
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 15s 
+      start_period: 30s
+
+  cypress-gui:
+    image: cypress/included:13.1.0
+    working_dir: /e2e
+    entrypoint: []
+    command: cypress open --project /e2e
+    volumes:
+      - ./e2e:/e2e
+      - /e2e/node_modules
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+      - CYPRESS_baseUrl=http://angular-app:4200
+      - QT_X11_NO_MITSHM=1
+      - _X11_NO_MITSHM=1
+      - _MITSHM=0
+    depends_on:
+      angular-app:
+        condition: service_healthy
+    network_mode: host

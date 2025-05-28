@@ -1,0 +1,11 @@
+{
+  "name": "employee-manager-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "cypress": "^13.1.0"
+  },
+  "scripts": {
+    "test": "cypress run --browser chrome --headless"
+  }
+}
