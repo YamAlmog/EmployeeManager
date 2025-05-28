@@ -206,4 +206,127 @@ describe('Employee Manager Basic Tests', () => {
       expect(text).not.to.include(employeeToDelete.lastName);
     });
   });
+
+  it('should update an employee successfully', () => {
+    // Test data for the employee we'll update
+    const employeeToUpdate = {
+      firstName: 'Emily',
+      lastName: 'Clark',
+      department: 'Design'
+    };
+
+    const updatedInfo = {
+      firstName: 'Emma',
+      lastName: 'Clarke',
+      age: 28,
+      city: 'Chicago',
+      street: '456 Oak St',
+      department: 'Management'
+    };
+
+    // Intercept API calls
+    cy.intercept('GET', '**/api/employees').as('getEmployees');
+    cy.intercept('PUT', '**/api/employees/*').as('updateEmployee');
+
+    // Visit the page and wait for initial load
+    cy.visit('/');
+    cy.wait('@getEmployees');
+
+    // Filter to find our employee
+    cy.get('input#nameFilter')
+      .should('be.visible')
+      .clear()
+      .type(employeeToUpdate.firstName);
+
+    // Find and click edit button for our employee
+    cy.get('table tbody tr')
+      .first()
+      .within(() => {
+        // Verify it's the right employee before editing
+        cy.contains(employeeToUpdate.firstName).should('be.visible');
+        cy.contains(employeeToUpdate.lastName).should('be.visible');
+        cy.contains(employeeToUpdate.department.toUpperCase()).should('be.visible');
+        
+        // Click the edit button
+        cy.get('.edit-btn').should('be.visible').click();
+      });
+
+    // Update the form fields
+    cy.get('form').within(() => {
+      // Fill each field and verify
+      cy.get('input[name="firstName"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.firstName)
+        .should('have.value', updatedInfo.firstName);
+
+      cy.get('input[name="lastName"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.lastName)
+        .should('have.value', updatedInfo.lastName);
+
+      cy.get('input[name="age"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.age)
+        .should('have.value', updatedInfo.age.toString());
+
+      cy.get('input[name="city"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.city)
+        .should('have.value', updatedInfo.city);
+
+      cy.get('input[name="street"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.street)
+        .should('have.value', updatedInfo.street);
+
+      cy.get('input[name="department"]')
+        .should('be.visible')
+        .clear()
+        .type(updatedInfo.department)
+        .should('have.value', updatedInfo.department);
+
+      // Submit the form
+      cy.get('button[type="submit"]')
+        .should('be.visible')
+        .should('not.be.disabled')
+        .click();
+    });
+
+    // Wait for the API call to complete
+    cy.wait('@updateEmployee').then((interception) => {
+      expect(interception.response.statusCode).to.equal(200);
+      expect(interception.response.body).to.include({
+        firstName: updatedInfo.firstName,
+        lastName: updatedInfo.lastName,
+        department: updatedInfo.department
+      });
+    });
+
+    // Verify the modal is closed
+    cy.get('form').should('not.exist');
+
+    // Clear any existing filters
+    cy.get('input#nameFilter')
+      .should('be.visible')
+      .clear();
+
+    // Filter to find the updated employee
+    cy.get('input#nameFilter')
+      .type(updatedInfo.firstName);
+
+    // Verify the updated employee appears in the table
+    cy.get('table tbody tr')
+      .should('have.length.at.least', 1)
+      .first()
+      .within(() => {
+        cy.contains(updatedInfo.firstName).should('be.visible');
+        cy.contains(updatedInfo.lastName).should('be.visible');
+        cy.contains(updatedInfo.department.toUpperCase()).should('be.visible');
+      });
+  });
 }); 

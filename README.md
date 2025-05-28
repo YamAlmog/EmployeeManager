@@ -51,6 +51,30 @@ To stop the containers:
 docker-compose down
 ```
 
+## Running Tests
+
+### End-to-End Tests with Cypress
+
+1. First, make sure the application is running with Docker Compose:
+```bash
+docker-compose up --build
+```
+
+2. In a new terminal, run the Cypress tests:
+```bash
+# Open Cypress Test Runner (interactive mode)
+npx cypress open
+
+# Or run tests in headless mode (runs in the terminal without opening a browser window)
+npx cypress run
+```
+
+The Cypress tests will run against the dockerized application running at `http://localhost:4200`.
+
+
+Key test files:
+- `e2e/cypress/e2e/employee-crud.cy.js`: Tests for employee CRUD operations
+
 ## Project Structure
 
 ```
