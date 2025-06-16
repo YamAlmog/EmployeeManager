@@ -63,8 +63,10 @@ docker-compose up --build
 ```
 
 2. Open a new terminal and install Cypress:
+    
 ```bash
 npm install cypress --save-dev
+cd e2e
 ```
 
 3. Run the tests:
