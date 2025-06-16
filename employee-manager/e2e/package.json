@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "cypress": "^13.1.0"
+    "cypress": "^13.17.0"
   },
   "scripts": {
     "test": "cypress run --browser chrome --headless"

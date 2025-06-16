@@ -69,23 +69,21 @@ export class EmployeesViewComponent implements OnInit, OnDestroy {
   }
 
   applyFilters(): void {
-    let filtered = this.employees;
-    if (this.nameFilter) {
-      const search = this.nameFilter.toLowerCase();
-      filtered = filtered.filter(employee =>
-        (`${employee.firstName} ${employee.lastName}`).toLowerCase().includes(search)
-      );
-    }
-    if (this.departmentFilter) {
-      filtered = filtered.filter(employee =>
-        employee.department === this.departmentFilter
-      );
-    }
-    if (this.cityFilter) {
-      filtered = filtered.filter(employee =>
-        employee.address.city === this.cityFilter
-      );
-    }
+    const searchText = this.nameFilter ? this.nameFilter.toLowerCase() : '';
+    // Go through all employees and keep only the ones that match all filters
+    const filtered = this.employees.filter(employee => {
+      const fullName = (employee.firstName + ' ' + employee.lastName).toLowerCase();
+      // Check if name matches the search text (or no search at all)
+      const nameMatches = !searchText || fullName.includes(searchText);
+      
+      const departmentMatches = !this.departmentFilter || employee.department === this.departmentFilter;
+
+      const cityMatches = !this.cityFilter || employee.address.city === this.cityFilter;
+
+      // Keep the employee only if all filters match
+      return nameMatches && departmentMatches && cityMatches;
+    });
+
     this.filteredEmployees = filtered;
     this.cdr.markForCheck();
   }
